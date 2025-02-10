@@ -1,4 +1,4 @@
-export alphabet = [
+export const alphabet = [
   "De a van alfabet",
   "De b van been",
   "De c van cent",
