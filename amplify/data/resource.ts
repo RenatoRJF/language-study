@@ -1,6 +1,12 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 
 const schema = a.schema({
+  Category: a.model({
+    id: a.id(),
+    name: a.string(),
+  }).authorization(allow => [
+    allow.publicApiKey().to(["read", "create", "update", "delete"]),
+  ]),
   User: a.model({
     username: a.string()
   }).authorization((allow) => [
@@ -19,6 +25,7 @@ const schema = a.schema({
       text: a.string(),
       random: a.float(),
       translations: a.json(),
+      categoryId: a.belongsTo('Category', 'id'),
     })
     .authorization((allow) => [
       allow.publicApiKey().to(["read", "create", "update", "delete"]),
