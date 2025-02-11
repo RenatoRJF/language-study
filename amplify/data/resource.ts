@@ -13,9 +13,12 @@ const schema = a.schema({
     allow.publicApiKey().to(["read", "create", "update"]),
   ]),
   Challenge: a.model({
+    type: a.enum(['PHRASES', 'VOCAB', 'TEXT', 'LISTENING']),
     users: a.json(),
     result: a.json(),
     questions: a.json(),
+    started: a.boolean(),
+    finished: a.boolean()
   })
   .authorization((allow) => [
     allow.publicApiKey().to(["read", "create", "update"]),
