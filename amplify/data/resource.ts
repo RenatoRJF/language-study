@@ -3,7 +3,6 @@ import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 const schema = a.schema({
   Category: a
     .model({
-      id: a.id(),
       name: a.string(),
     })
     .authorization((allow) =>
@@ -21,11 +20,13 @@ const schema = a.schema({
   Challenge: a
     .model({
       type: a.enum(["PHRASES", "VOCAB", "TEXT", "LISTENING"]),
+      mode: a.enum(["INDIVIDUAL", "GROUP"]),
       users: a.json(),
       result: a.json(),
       questions: a.json(),
       started: a.boolean(),
       finished: a.boolean(),
+      totalQuestions: a.integer(),
     })
     .authorization((allow) =>
       allow.publicApiKey().to(["read", "create", "update"])
