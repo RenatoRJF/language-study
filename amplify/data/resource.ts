@@ -4,7 +4,7 @@ const schema = a.schema({
   Category: a
     .model({
       name: a.string(),
-      phrases: a.hasMany("Phrase", "categoryId"),
+      phrases: a.hasMany("Phrase", 'category'),
     })
     .authorization((allow) =>
       allow.publicApiKey().to(["read", "create", "update", "delete"])
@@ -36,7 +36,7 @@ const schema = a.schema({
       text: a.string(),
       random: a.float(),
       translations: a.json(),
-      categoryId: a.belongsTo("Category", "id"),
+      category: a.belongsTo("Category", 'id'),
     })
     .authorization((allow) =>
       allow.publicApiKey().to(["read", "create", "update", "delete"])
