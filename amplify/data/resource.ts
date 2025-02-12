@@ -35,8 +35,8 @@ const schema = a.schema({
     .model({
       text: a.string(),
       random: a.float(),
+      category: a.string(),
       translations: a.json(),
-      categoryId: a.hasOne("Category", 'id'),
     })
     .authorization((allow) =>
       allow.publicApiKey().to(["read", "create", "update", "delete"])
