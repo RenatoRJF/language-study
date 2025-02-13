@@ -23,6 +23,7 @@ const schema = a.schema({
       mode: a.enum(["INDIVIDUAL", "GROUP"]),
       users: a.json(),
       questions: a.json(),
+      challengeCode: a.string(),
       totalQuestions: a.integer(),
     })
     .authorization((allow) =>

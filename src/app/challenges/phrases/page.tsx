@@ -40,7 +40,9 @@ export default function ChallengesPage() {
 
     client.models.Challenge.create(payloadData).then(({ data }) => {
       if (data) {
-        navigate.push(`/challenges/phrases/${data.id}`);
+        client.models.ChallengeProgress.create({ challengeId: data.id }).then(
+          () => navigate.push(`/challenges/phrases/${data.id}`)
+        );
       }
     });
   };
