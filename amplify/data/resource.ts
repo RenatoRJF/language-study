@@ -32,7 +32,7 @@ const schema = a.schema({
       allow.publicApiKey().to(["read", "create", "update"])
     ),
 
-  Phrase: a
+  Question: a
     .model({
       text: a.string(),
       random: a.float(),

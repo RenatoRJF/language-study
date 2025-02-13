@@ -35,16 +35,16 @@ const formSchema = z.object({
 export default function Admin() {
   const form = useForm<Phrase>({ resolver: zodResolver(formSchema) });
 
-  const [phrases, setPhrases] = useState<Array<Schema["Phrase"]["type"]>>([]);
+  const [phrases, setPhrases] = useState<Array<Schema["Question"]["type"]>>([]);
 
   const listPhrases = () => {
-    client.models.Phrase.observeQuery().subscribe({
+    client.models.Question.observeQuery().subscribe({
       next: (data) => setPhrases([...data.items]),
     });
   };
 
   const handleAddPhrase = ({ text, translations }: Phrase) => {
-    client.models.Phrase.create({
+    client.models.Question.create({
       text,
       translations: JSON.stringify({ ...translations }),
     }).then(() => form.reset());

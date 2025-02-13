@@ -29,7 +29,7 @@ export default function PhraseChallengePage() {
     isCorrect: false,
     currentAnswer: "",
   });
-  const [questions, setQuestions] = useState<Schema["Phrase"]["type"][]>([]);
+  const [questions, setQuestions] = useState<Schema["Question"]["type"][]>([]);
 
   const validateQuestion = ({ answer }: PhraseFormData) => {
     form.reset();
@@ -66,7 +66,7 @@ export default function PhraseChallengePage() {
   useEffect(() => {
     // assignRandomValues()
 
-    client.models.Phrase.list({ limit: 5 }).then(({ data }) => {
+    client.models.Question.list({ limit: 5 }).then(({ data }) => {
       setQuestions(data);
       setIsLoading(false);
     });

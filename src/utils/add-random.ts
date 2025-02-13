@@ -9,10 +9,10 @@ Amplify.configure(outputs);
 const client = generateClient<Schema>();
 
 export async function assignRandomValues() {
-  const phrases = await client.models.Phrase.list();
+  const phrases = await client.models.Question.list();
 
   phrases.data.forEach(async (phrase) => {
-    await client.models.Phrase.update({
+    await client.models.Question.update({
       id: phrase.id,
       random: Math.random(),
     });

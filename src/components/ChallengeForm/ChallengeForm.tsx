@@ -30,7 +30,7 @@ export default function ChallengeForm({ onSubmit }: ChallengeFormProps) {
       category: "",
       type: "PHRASES",
       mode: "INDIVIDUAL",
-      totalQuestions: 5,
+      totalQuestions: 3,
     },
   });
 

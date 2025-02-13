@@ -1,3 +1,9 @@
+import { Schema } from "@/amplify/data/resource";
+
+export type ChallengePayload = Schema["Challenge"]["type"] & {
+  category: string;
+};
+
 export interface ChallengeFormProps {
-  onSubmit: () => void;
+  onSubmit: (payload: ChallengePayload) => void;
 }
