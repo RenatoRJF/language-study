@@ -24,11 +24,10 @@ export default function ChallengesPage() {
 
     // generate questions based on type
     if (payload.type === "PHRASES") {
-      // generate questions based on category and totalQuestions
-      // TODO: randomize questions
+      // get random questions based on category and random fields
       const questionsResponse = await client.models.Question.list({
-        limit: Number(payload.totalQuestions),
-        filter: { category: { eq: category } },
+        limit: Number(payload.totalQuestions) + 1,
+        filter: { category: { eq: category }, random: { ge: Math.random() } },
       });
 
       if (questionsResponse.data) {

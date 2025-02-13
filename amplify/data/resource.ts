@@ -22,10 +22,7 @@ const schema = a.schema({
       type: a.enum(["PHRASES", "VOCAB", "TEXT", "LISTENING"]),
       mode: a.enum(["INDIVIDUAL", "GROUP"]),
       users: a.json(),
-      result: a.json(),
       questions: a.json(),
-      started: a.boolean(),
-      finished: a.boolean(),
       totalQuestions: a.integer(),
     })
     .authorization((allow) =>
@@ -42,6 +39,14 @@ const schema = a.schema({
     .authorization((allow) =>
       allow.publicApiKey().to(["read", "create", "update", "delete"])
     ),
+
+  ChallengeProgress: a.model({
+    result: a.json(),
+    challengeId: a.string(),
+    startedAt: a.timestamp(),
+    finishedAt: a.timestamp(),
+    currentQuestionIndex: a.integer(),
+  }),
 });
 
 export type Schema = ClientSchema<typeof schema>;
