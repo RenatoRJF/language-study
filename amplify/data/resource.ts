@@ -40,13 +40,17 @@ const schema = a.schema({
       allow.publicApiKey().to(["read", "create", "update", "delete"])
     ),
 
-  ChallengeProgress: a.model({
-    result: a.json(),
-    challengeId: a.string(),
-    startedAt: a.timestamp(),
-    finishedAt: a.timestamp(),
-    currentQuestionIndex: a.integer(),
-  }),
+  ChallengeProgress: a
+    .model({
+      result: a.json(),
+      challengeId: a.string(),
+      startedAt: a.timestamp(),
+      finishedAt: a.timestamp(),
+      currentQuestionIndex: a.integer(),
+    })
+    .authorization((allow) =>
+      allow.publicApiKey().to(["read", "create", "update", "delete"])
+    ),
 });
 
 export type Schema = ClientSchema<typeof schema>;
