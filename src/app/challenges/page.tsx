@@ -1,40 +1,43 @@
 "use client";
 
-import { Amplify } from "aws-amplify";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { generateClient } from "aws-amplify/api";
 
-import outputs from "@/amplify_outputs.json";
+import { client } from "@/src/api";
 import { useAppStore } from "@/src/store/app";
-import { Schema } from "@/amplify/data/resource";
+import { useChallengesStore } from "@/src/store/challenges";
 import JoinChallengeForm from "@/src/components/JoinChallengeForm/JoinChallengeForm";
-
-Amplify.configure(outputs);
-
-const client = generateClient<Schema>();
 
 export default function ChallengesPage() {
   const navigate = useRouter();
   const { user } = useAppStore();
+  const { activeChallenges, updateChallengeStore } = useChallengesStore();
 
   const handleJoinChallenge = (challengeCode: string) => {
-    client.models.Challenge.list({
-      filter: { challengeCode: { eq: challengeCode } },
-    }).then(({ data }) => {
-      const challenge = data.find((c) => c.challengeCode === challengeCode);
+    const challenge = activeChallenges.find(
+      (c) => c.challengeCode === challengeCode
+    );
 
-      if (challenge) {
-        const users = Array.isArray(challenge.users)
-          ? [...challenge.users, user]
-          : [user];
+    if (challenge) {
+      const users = JSON.parse(String(challenge.users));
 
-        // Add user to challenge
-        client.models.Challenge.update({ id: challenge.id, users }).then(() => {
-          navigate.push(`/challenges/phrases/${challenge.id}`);
-        });
-      }
-    });
+      // Add user to challenge
+      client.models.Challenge.update({
+        id: challenge.id,
+        users: JSON.stringify(Array.isArray(users) ? [...users, user] : [user]),
+      }).then(() => {
+        navigate.push(`/challenges/phrases/${challenge.id}`);
+      });
+    }
   };
+
+  useEffect(() => {
+    client.models.Challenge.observeQuery().subscribe({
+      next: (data) => {
+        updateChallengeStore({ activeChallenges: data.items });
+      },
+    });
+  }, [updateChallengeStore]);
 
   return (
     <div className="h-screen flex flex-col justify-center items-center">

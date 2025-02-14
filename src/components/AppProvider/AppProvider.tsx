@@ -12,14 +12,15 @@ export default function AppProvider({ children }: AppProviderProps) {
 
   useEffect(() => {
     const userId = window.localStorage.getItem("userId");
+    const isBasePath = window.location.pathname === "/";
 
     if (userId && !user) {
       client.models.User.get({ id: String(userId) })
         .then(({ data }) => updateStore({ user: data, loading: false }))
         .catch(() => console.log("Failed to get user "));
-    } else if (user) {
+    } else if (user && isBasePath) {
       setTimeout(() => redirect("/challenges"));
-    } else if (window.location.pathname !== "/" && !user) {
+    } else if (!isBasePath && !user) {
       setTimeout(() => redirect("/"));
       setTimeout(() => updateStore({ loading: false }), 100);
     } else {

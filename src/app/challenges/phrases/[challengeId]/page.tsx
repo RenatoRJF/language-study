@@ -7,6 +7,7 @@ import { generateClient } from "aws-amplify/api";
 
 import outputs from "@/amplify_outputs.json";
 import { Schema } from "@/amplify/data/resource";
+import { useAppStore } from "@/src/store/app";
 
 Amplify.configure(outputs);
 
@@ -23,6 +24,7 @@ type ChallengeProgress = Schema["ChallengeProgress"]["type"];
 // ];
 
 export default function CreatePhraseChallengePage() {
+  const { user } = useAppStore();
   const { challengeId = "" } = useParams();
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [challenge, setChallenge] = useState<Challenge>();
@@ -109,20 +111,60 @@ export default function CreatePhraseChallengePage() {
     ((Array.isArray(challenge.users) && challenge.users.length < 2) ||
       !challenge.users);
 
+  const users = (challenge.users as Array<User>) ?? [];
+
   if (!progress.startedAt) {
     return (
       <div className="h-screen flex flex-col justify-center items-center">
         <div>
-          <span>{`Mode: ${challenge?.mode}`}</span>
+          <span>{`Mode: ${challenge.mode}`}</span>
+          {isGroupMode && (
+            <span>{`Challenge code: ${challenge.challengeCode}`}</span>
+          )}
         </div>
 
-        {isGroupMode && allUsers.length > 0 && (
+        {isGroupMode && (
           <div>
-            {allUsers.map((user) => (
-              <button key={user.id} onClick={() => handleAddUser(user)}>
-                {user.username}
-              </button>
-            ))}
+            {users.map((availableUser) => {
+              if (availableUser.id !== user?.id) {
+                return (
+                  <button
+                    key={availableUser.id}
+                    onClick={() => handleAddUser(availableUser)}
+                    className="flex items-center gap-2"
+                  >
+                    <span>
+                      {users.some((u) => u.id === availableUser.id) && `✅`}
+                    </span>
+                    <span>{availableUser.username}</span>
+                  </button>
+                );
+              }
+              return null;
+            })}
+          </div>
+        )}
+
+        {isGroupMode && (
+          <div className="min-w-[400px] bg-gray-100 py-2 px-4">
+            <h3 className="text-lg font-semibold">Invite user</h3>
+
+            {allUsers.map((availableUser) => {
+              const hasJoined = users.some((u) => u.id === availableUser.id);
+
+              if (availableUser.id !== user?.id && !hasJoined) {
+                return (
+                  <button
+                    key={availableUser.id}
+                    onClick={() => handleAddUser(availableUser)}
+                    className="flex items-center gap-2"
+                  >
+                    <span>{availableUser.username}</span>
+                  </button>
+                );
+              }
+              return null;
+            })}
           </div>
         )}
 

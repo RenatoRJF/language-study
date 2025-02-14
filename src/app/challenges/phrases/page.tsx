@@ -1,20 +1,15 @@
 "use client";
 
-import { Amplify } from "aws-amplify";
 import { useRouter } from "next/navigation";
-import { generateClient } from "aws-amplify/api";
-import { Schema } from "@/amplify/data/resource";
 
-import outputs from "@/amplify_outputs.json";
+import { useAppStore } from "@/src/store/app";
+import { generateUniqueCode, client } from "@/src/api";
 import ChallengeForm from "@/src/components/ChallengeForm/ChallengeForm";
 import { ChallengePayload } from "@/src/components/ChallengeForm/ChallengeForm.types";
 
-Amplify.configure(outputs);
-
-const client = generateClient<Schema>();
-
 export default function ChallengesPage() {
   const navigate = useRouter();
+  const { user } = useAppStore();
 
   const handleCreateChallenge = async ({
     category,
@@ -31,8 +26,12 @@ export default function ChallengesPage() {
       });
 
       if (questionsResponse.data) {
+        const challengeCode = await generateUniqueCode();
+
         payloadData = {
           ...payloadData,
+          challengeCode,
+          users: JSON.stringify([user]),
           questions: JSON.stringify(questionsResponse.data),
         };
       }
