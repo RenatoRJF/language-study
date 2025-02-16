@@ -53,6 +53,19 @@ const schema = a.schema({
     .authorization((allow) =>
       allow.publicApiKey().to(["read", "create", "update", "delete"])
     ),
+
+  Answer: a
+    .model({
+      useId: a.string(),
+      answer: a.string(),
+      question: a.string(),
+      isCorrect: a.boolean(),
+      questionId: a.string(),
+      challengeId: a.string(),
+    })
+    .authorization((allow) =>
+      allow.publicApiKey().to(["read", "create", "update", "delete"])
+    ),
 });
 
 export type Schema = ClientSchema<typeof schema>;
